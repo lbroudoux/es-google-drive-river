@@ -26,6 +26,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.block.ClusterBlockException;
+import org.elasticsearch.common.Base64;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -36,7 +37,10 @@ import org.elasticsearch.river.River;
 import org.elasticsearch.river.RiverName;
 import org.elasticsearch.river.RiverSettings;
 
+import com.github.lbroudoux.elasticsearch.river.drive.connector.DriveChanges;
 import com.github.lbroudoux.elasticsearch.river.drive.connector.DriveConnector;
+import com.google.api.services.drive.model.Change;
+import com.google.api.services.drive.model.File;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 /**
@@ -44,7 +48,7 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  * @author laurent
  */
 public class DriveRiver extends AbstractRiverComponent implements River{
-
+   
    private final Client client;
    
    private final String indexName;
@@ -62,6 +66,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
    private final DriveConnector drive;
    
    @Inject
+   @SuppressWarnings({ "unchecked" })
    protected DriveRiver(RiverName riverName, RiverSettings settings, Client client){
       super(riverName, settings);
       this.client = client;
@@ -235,8 +240,43 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          if (logger.isDebugEnabled()){
             logger.debug("Starting scanning of folder {} since {}", folder, lastChangesId);
          }
-         drive.getChanges(folder, lastChangesId);
+         DriveChanges changes = drive.getChanges(folder, lastChangesId);
+         
+         //
+         for (Change change : changes.getChanges()){
+            if (change.getDeleted()){
+               
+            } else {
+               indexFile(change.getFile());
+            }
+         }
          return null;
+      }
+      
+      /**
+       * 
+       */
+      private void indexFile(File driveFile){
+         if (logger.isDebugEnabled()){
+            logger.debug("Trying to index " + driveFile.getTitle());
+         }
+         
+         try{
+            byte[] fileContent = drive.getContent(driveFile);
+            if (fileContent != null){
+               esIndex(indexName, typeName, driveFile.getId(),
+                     jsonBuilder()
+                        .startObject()
+                           .field(DriveRiverUtil.DOC_FIELD_TITLE, driveFile.getTitle())
+                           .field(DriveRiverUtil.DOC_FIELD_CREATED_DATE, driveFile.getCreatedDate().getValue())
+                           .startObject("file").field("_title", driveFile.getTitle())
+                              .field("content", Base64.encodeBytes(fileContent))
+                           .endObject()
+                        .endObject());
+            }
+         } catch (Exception e) {
+            logger.warn("Can not index " + driveFile.getTitle() + " : " + e.getMessage());
+         }
       }
 
       private void updateRiver(String lastChangesField, Long lastChangesId) throws Exception{
