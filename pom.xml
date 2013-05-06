@@ -6,9 +6,34 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>laurent</id>
+      <name>Laurent Broudoux</name>
+      <email>laurent.broudoux@gmail.com</email>
+      <url>http://lbroudoux.wordpress.com</url>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+  <scm>
+    <url>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</url>
+  </scm>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/lbroudoux/es-google-drive-river/issues/</url>
+  </issueManagement>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <elasticsearch.version>0.90.0</elasticsearch.version>
+    <elasticsearch.attachment.version>1.6.0</elasticsearch.attachment.version>
   </properties>
   
   <dependencies>
@@ -16,6 +41,12 @@
       <groupId>org.elasticsearch</groupId>
       <artifactId>elasticsearch</artifactId>
       <version>${elasticsearch.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch-mapper-attachments</artifactId>
+      <version>${elasticsearch.attachment.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.apis</groupId>
