@@ -18,6 +18,7 @@
  */
 package com.github.lbroudoux.elasticsearch.river.drive.river;
 
+import java.util.List;
 /**
  * 
  * @author laurent
@@ -27,16 +28,21 @@ public class DriveRiverFeedDefinition{
    private String feedname;
    private String folder;
    private int updateRate;
+   private List<String> includes;
+   private List<String> excludes;
    
    private String clientId;
    private String clientSecret;
    private String refreshToken;
    
    
-   public DriveRiverFeedDefinition(String feedname, String folder, int updateRate, String clientId, String clientSecret, String refreshToken){
+   public DriveRiverFeedDefinition(String feedname, String folder, int updateRate, 
+         List<String> includes, List<String> excludes, String clientId, String clientSecret, String refreshToken){
       this.feedname = feedname;
       this.folder = folder;
       this.updateRate = updateRate;
+      this.includes = includes;
+      this.excludes = excludes;
       this.clientId = clientId;
       this.clientSecret = clientSecret;
       this.refreshToken = refreshToken;
@@ -61,6 +67,20 @@ public class DriveRiverFeedDefinition{
    }
    public void setUpdateRate(int updateRate) {
       this.updateRate = updateRate;
+   }
+   
+   public List<String> getIncludes() {
+      return includes;
+   }
+   public void setIncludes(List<String> includes) {
+      this.includes = includes;
+   }
+
+   public List<String> getExcludes() {
+      return excludes;
+   }
+   public void setExcludes(List<String> excludes) {
+      this.excludes = excludes;
    }
 
    public String getClientId() {
