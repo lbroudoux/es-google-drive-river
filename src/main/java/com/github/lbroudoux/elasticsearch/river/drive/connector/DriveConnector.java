@@ -163,20 +163,21 @@ public class DriveConnector{
    }
    
    /**
-    * 
-    * @param driveFile
-    * @return
+    * Download Google Drive file as byte array.
+    * @param driveFile The file to download
+    * @return This file bytes or null if something goes wrong.
     */
-   public byte[] getContent(File driveFile) {
-      if (driveFile.getDownloadUrl() != null
-            && driveFile.getDownloadUrl().length() > 0) {
-
+   public byte[] getContent(File driveFile){
+      if (logger.isDebugEnabled()){
+         logger.debug("Downloading file content from {}", driveFile.getDownloadUrl());
+      }
+      // TODO: 'application/vnd.google-apps.document'
+      if (driveFile.getDownloadUrl() != null && driveFile.getDownloadUrl().length() > 0){
          InputStream is = null;
          ByteArrayOutputStream bos = null;
 
-         try {
-            // Execute GET request on download url and retrieve input and output
-            // streams.
+         try{
+            // Execute GET request on download url and retrieve input and output streams.
             HttpResponse response = service.getRequestFactory()
                   .buildGetRequest(new GenericUrl(driveFile.getDownloadUrl()))
                   .execute();
@@ -197,13 +198,13 @@ public class DriveConnector{
             e.printStackTrace();
             return null;
          } finally {
-            if (bos != null) {
-               try {
+            if (bos != null){
+               try{
                   bos.close();
                } catch (IOException e) {
                }
             }
-            try {
+            try{
                is.close();
             } catch (IOException e) {
             }

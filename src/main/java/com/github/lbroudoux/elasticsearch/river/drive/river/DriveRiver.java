@@ -370,6 +370,8 @@ public class DriveRiver extends AbstractRiverComponent implements River{
                if (logger.isDebugEnabled()){
                   logger.debug("Index " + driveFile.getTitle() + " : success");
                }
+            } else {
+               logger.debug("File content was returned as null");
             }
          } catch (Exception e) {
             logger.warn("Can not index " + driveFile.getTitle() + " : " + e.getMessage());
@@ -429,9 +431,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          }
       }
       
-      /**
-       * Add to bulk an IndexRequest.
-       */
+      /** Add to bulk an IndexRequest. */
       private void esIndex(String index, String type, String id, XContentBuilder xb) throws Exception{
          if (logger.isDebugEnabled()){
             logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
@@ -444,9 +444,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          commitBulkIfNeeded();
       }
 
-      /**
-       * Add to bulk a DeleteRequest.
-       */
+      /** Add to bulk a DeleteRequest. */
       private void esDelete(String index, String type, String id) throws Exception{
          if (logger.isDebugEnabled()){
             logger.debug("Deleting from ES " + index + ", " + type + ", " + id);

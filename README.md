@@ -58,6 +58,7 @@ Once you get back the success reply from Google, you can get the future river re
 
 ```sh
 $ curl http://localhost:9200/_drive/oauth/clientId/clientSecret/authorizationCode
+```
 
 ```javascript
 {
