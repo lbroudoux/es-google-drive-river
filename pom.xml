@@ -6,6 +6,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -23,7 +29,8 @@
     </developer>
   </developers>
   <scm>
-    <url>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</url>
+    <url>git@github.com:lbroudoux/es-google-drive-river.git</url>
+    <connection>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</connection>
   </scm>
   <issueManagement>
     <system>GitHub</system>

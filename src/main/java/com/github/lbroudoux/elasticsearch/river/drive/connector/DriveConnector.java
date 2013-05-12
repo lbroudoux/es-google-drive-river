@@ -55,8 +55,15 @@ import com.google.api.services.drive.model.ParentReference;
  * @author laurent
  */
 public class DriveConnector{
-
+   
    private static final ESLogger logger = Loggers.getLogger(DriveConnector.class);
+   
+   /** */
+   public static final String APPLICATION_VND_GOOGLE_APPS_FOLDER = "application/vnd.google-apps.folder";
+   /** */
+   public static final String APPLICATION_VND_GOOGLE_APPS_DOCUMENT = "application/vnd.google-apps.document";
+   /** */
+   public static final String APPLICATION_VND_GOOGLE_APPS_SPREADSHEET = "application/vnd.google-apps.spreadsheet";
    
    private final String clientId;
    private final String clientSecret;
@@ -171,15 +178,24 @@ public class DriveConnector{
       if (logger.isDebugEnabled()){
          logger.debug("Downloading file content from {}", driveFile.getDownloadUrl());
       }
-      // TODO: 'application/vnd.google-apps.document'
+      // Find an appropriate download url depending on mime type.
+      String downloadUrl = null;
       if (driveFile.getDownloadUrl() != null && driveFile.getDownloadUrl().length() > 0){
+         downloadUrl = driveFile.getDownloadUrl();
+      } else if (APPLICATION_VND_GOOGLE_APPS_DOCUMENT.equals(driveFile.getMimeType())){
+         downloadUrl = driveFile.getExportLinks().get("application/pdf");
+      } else if (APPLICATION_VND_GOOGLE_APPS_SPREADSHEET.equals(driveFile.getMimeType())){
+         downloadUrl = driveFile.getExportLinks().get("application/pdf");
+      }
+      
+      if (downloadUrl != null){
          InputStream is = null;
          ByteArrayOutputStream bos = null;
 
          try{
             // Execute GET request on download url and retrieve input and output streams.
             HttpResponse response = service.getRequestFactory()
-                  .buildGetRequest(new GenericUrl(driveFile.getDownloadUrl()))
+                  .buildGetRequest(new GenericUrl(downloadUrl))
                   .execute();
             is = response.getContent();
             bos = new ByteArrayOutputStream();
@@ -214,6 +230,21 @@ public class DriveConnector{
       }
    }
    
+   /**
+    * Retrieve the mime type associated to a Google Drive file.
+    * @param driveFile The file to get type for
+    * @return This file mime type for indexation
+    */
+   public String getMimeType(File driveFile){
+      // If document or spreadsheet, we have asked PDF export so tell it's a PDF...
+      if (APPLICATION_VND_GOOGLE_APPS_DOCUMENT.equals(driveFile.getMimeType())){
+         return "application/pdf";
+      } else if (APPLICATION_VND_GOOGLE_APPS_SPREADSHEET.equals(driveFile.getMimeType())){
+         return "application/pdf";
+      }
+      return driveFile.getMimeType();
+   }
+   
    /** */
    private boolean isChangeInValidSubfolder(Change change){
       // If no folder specified, change is valid.
@@ -244,7 +275,8 @@ public class DriveConnector{
       try{
          request = service.files().list()
                .setMaxResults(2)
-               .setQ("title='" + rootFolderName + "' and mimeType='application/vnd.google-apps.folder' and 'root' in parents");
+               .setQ("title='" + rootFolderName + "' and mimeType='" + APPLICATION_VND_GOOGLE_APPS_FOLDER 
+                     + "' and 'root' in parents");
          FileList files = request.execute();
          logger.debug("Found {} files corresponding to searched root folder", files.getItems().size());
          if (files != null && files.getItems().size() != 1){
@@ -263,7 +295,7 @@ public class DriveConnector{
       try{
          request = service.files().list()
                .setMaxResults(Integer.MAX_VALUE)
-               .setQ("mimeType='application/vnd.google-apps.folder'");
+               .setQ("mimeType='" + APPLICATION_VND_GOOGLE_APPS_FOLDER + "'");
          FileList files = request.execute();
          for (File folder : files.getItems()){
             List<ParentReference> parents = folder.getParents();

@@ -49,7 +49,7 @@ import com.google.api.services.drive.model.File;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 /**
- * 
+ * A River component for scanning and indexing Google Drive documents into Elasticsearch.
  * @author laurent
  */
 public class DriveRiver extends AbstractRiverComponent implements River{
@@ -361,7 +361,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
                            .field(DriveRiverUtil.DOC_FIELD_CREATED_DATE, driveFile.getCreatedDate().getValue())
                            .field(DriveRiverUtil.DOC_FIELD_MODIFIED_DATE, driveFile.getModifiedDate().getValue())
                            .startObject("file")
-                              .field("_content_type", driveFile.getMimeType())
+                              .field("_content_type", drive.getMimeType(driveFile))
                               .field("_name", driveFile.getTitle())
                               .field("content", Base64.encodeBytes(fileContent))
                            .endObject()
