@@ -37,6 +37,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -121,9 +122,9 @@ public class DriveConnector{
     * Query Google Drive for getting the last changes since the lastChangesId (may be null
     * if this is the first time).
     * @param lastChangesId The identifier of last changes to start from 
-    * @return
+    * @return A bunch of changes wrapped into a DriveChanges object
     */
-   public DriveChanges getChanges(Long lastChangesId){
+   public DriveChanges getChanges(Long lastChangesId) throws IOException{
       if (logger.isDebugEnabled()){
          logger.debug("Getting drive changes since {}", lastChangesId);
       }
@@ -159,9 +160,15 @@ public class DriveConnector{
            if (changes.getLargestChangeId() > largestChangesId){
               largestChangesId = changes.getLargestChangeId();
            }
+         } catch (HttpResponseException hre){
+            if (hre.getStatusCode() == 401){
+               logger.error("Authorization exception while accessing Google Drive");
+            }
+            throw hre;
          } catch (IOException ioe) {
            logger.error("An error occurred while processing changes page: " + ioe);
            request.setPageToken(null);
+           throw ioe;
          }
       } while (request.getPageToken() != null && request.getPageToken().length() > 0);
       
