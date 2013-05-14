@@ -29,8 +29,9 @@
     </developer>
   </developers>
   <scm>
-    <url>git@github.com:lbroudoux/es-google-drive-river.git</url>
+    <url>scm:git@github.com:lbroudoux/es-google-drive-river.git</url>
     <connection>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</connection>
+    <developerConnection>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</developerConnection>
   </scm>
   <issueManagement>
     <system>GitHub</system>
