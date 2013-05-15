@@ -52,7 +52,6 @@ This will do the job...
 -> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.1...
 Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.1.zip...
 Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.1/google-drive-river-0.0.1.zip...
-Trying https://oss.sonatype.org/service/local/repositories/releases/content/com/github/lbroudoux/elasticsearch/google-drive-river/0.0.1/google-drive-river-0.0.1.zip...
 Downloading ......DONE
 Installed google-drive-river
 ```
@@ -61,7 +60,7 @@ Installed google-drive-river
 Get Google Drive credentials (clientId, clientSecret and refreshToken)
 ------------------------------------------
 
-First, you need to loggin to Google account owning the drive to scan and then create your own application and declare it as using the
+First, you need to login to Google account owning the drive to scan and then create your own application and declare it as using the
 Drive API into the [Google APIs Console](https://code.google.com/apis/console/).
 
 In order to do that, you can follow the 1st step of the Drive developers quickstart here : 
