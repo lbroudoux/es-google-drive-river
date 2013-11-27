@@ -27,7 +27,7 @@ import org.elasticsearch.common.xcontent.support.XContentMapValues;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 /**
- * 
+ * Utility class for Google Drive indexing management.
  * @author laurent
  */
 public class DriveRiverUtil{
@@ -95,7 +95,7 @@ public class DriveRiverUtil{
    /**
     * Tells if a Google Drive file is indexable from its title, based on includes
     * and excludes rules. 
-    * @return true if file shoud be indexed, false otherwise
+    * @return true if file should be indexed, false otherwise
     */
    public static boolean isIndexable(String fileTitle, List<String> includes, List<String> excludes){
       // If no rules specified, we index everything !

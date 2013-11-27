@@ -20,7 +20,7 @@ package com.github.lbroudoux.elasticsearch.river.drive.river;
 
 import java.util.List;
 /**
- * 
+ * A definition bean wrapping information of river feed settings. 
  * @author laurent
  */
 public class DriveRiverFeedDefinition{
