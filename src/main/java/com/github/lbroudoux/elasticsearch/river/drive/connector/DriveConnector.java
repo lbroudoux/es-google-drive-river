@@ -186,14 +186,7 @@ public class DriveConnector{
          logger.debug("Downloading file content from {}", driveFile.getDownloadUrl());
       }
       // Find an appropriate download url depending on mime type.
-      String downloadUrl = null;
-      if (driveFile.getDownloadUrl() != null && driveFile.getDownloadUrl().length() > 0){
-         downloadUrl = driveFile.getDownloadUrl();
-      } else if (APPLICATION_VND_GOOGLE_APPS_DOCUMENT.equals(driveFile.getMimeType())){
-         downloadUrl = driveFile.getExportLinks().get("application/pdf");
-      } else if (APPLICATION_VND_GOOGLE_APPS_SPREADSHEET.equals(driveFile.getMimeType())){
-         downloadUrl = driveFile.getExportLinks().get("application/pdf");
-      }
+      String downloadUrl = getDownloadUrl(driveFile);
       
       if (downloadUrl != null){
          InputStream is = null;
@@ -235,6 +228,24 @@ public class DriveConnector{
       } else {
          return null;
       }
+   }
+   
+   /**
+    * Retrieve the download url for a given drive file. Download url can vary
+    * depending on file Mime type.
+    * @param driveFile the file to get download url for.
+    * @return null if no suitable downlad url is found for this dile.
+    */
+   public String getDownloadUrl(File driveFile){
+      String downloadUrl = null;
+      if (driveFile.getDownloadUrl() != null && driveFile.getDownloadUrl().length() > 0){
+         downloadUrl = driveFile.getDownloadUrl();
+      } else if (APPLICATION_VND_GOOGLE_APPS_DOCUMENT.equals(driveFile.getMimeType())){
+         downloadUrl = driveFile.getExportLinks().get("application/pdf");
+      } else if (APPLICATION_VND_GOOGLE_APPS_SPREADSHEET.equals(driveFile.getMimeType())){
+         downloadUrl = driveFile.getExportLinks().get("application/pdf");
+      }
+      return downloadUrl;
    }
    
    /**

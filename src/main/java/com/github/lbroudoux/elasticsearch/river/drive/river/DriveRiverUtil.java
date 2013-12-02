@@ -37,6 +37,7 @@ public class DriveRiverUtil{
    public static final String DOC_FIELD_TITLE = "title";
    public static final String DOC_FIELD_CREATED_DATE = "createdDate";
    public static final String DOC_FIELD_MODIFIED_DATE = "modifiedDate";
+   public static final String DOC_FIELD_SOURCE_URL = "source_url";
 
    /**
     * Build mapping description for Google Drive files.
@@ -50,6 +51,7 @@ public class DriveRiverUtil{
          .startObject(DOC_FIELD_TITLE).field("type", "string").field("analyzer","keyword").endObject()
          .startObject(DOC_FIELD_CREATED_DATE).field("type", "date").endObject()
          .startObject(DOC_FIELD_MODIFIED_DATE).field("type", "date").endObject()
+         .startObject(DOC_FIELD_SOURCE_URL).field("type", "string").endObject()
          .startObject("file")
             .field("type", "attachment")
                .startObject("fields")

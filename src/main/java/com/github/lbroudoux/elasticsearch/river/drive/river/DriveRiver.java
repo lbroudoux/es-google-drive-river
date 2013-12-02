@@ -360,6 +360,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
                            .field(DriveRiverUtil.DOC_FIELD_TITLE, driveFile.getTitle())
                            .field(DriveRiverUtil.DOC_FIELD_CREATED_DATE, driveFile.getCreatedDate().getValue())
                            .field(DriveRiverUtil.DOC_FIELD_MODIFIED_DATE, driveFile.getModifiedDate().getValue())
+                           .field(DriveRiverUtil.DOC_FIELD_SOURCE_URL, driveFile.getAlternateLink())
                            .startObject("file")
                               .field("_content_type", drive.getMimeType(driveFile))
                               .field("_name", driveFile.getTitle())
