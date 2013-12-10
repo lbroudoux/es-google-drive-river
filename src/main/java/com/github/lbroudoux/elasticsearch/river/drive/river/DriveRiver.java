@@ -21,6 +21,7 @@ package com.github.lbroudoux.elasticsearch.river.drive.river;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.tika.metadata.Metadata;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -31,8 +32,8 @@ import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.block.ClusterBlockException;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
-import org.elasticsearch.common.Base64;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.io.stream.BytesStreamInput;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.support.XContentMapValues;
@@ -44,6 +45,7 @@ import org.elasticsearch.river.RiverSettings;
 
 import com.github.lbroudoux.elasticsearch.river.drive.connector.DriveChanges;
 import com.github.lbroudoux.elasticsearch.river.drive.connector.DriveConnector;
+import com.github.lbroudoux.elasticsearch.river.drive.river.TikaHolder;
 import com.google.api.services.drive.model.Change;
 import com.google.api.services.drive.model.File;
 
@@ -354,6 +356,10 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          try{
             byte[] fileContent = drive.getContent(driveFile);
             if (fileContent != null){
+               // Parse content using Tika directly.
+               String parsedContent = TikaHolder.tika().parseToString(
+                     new BytesStreamInput(fileContent, false), new Metadata());
+               
                esIndex(indexName, typeName, driveFile.getId(),
                      jsonBuilder()
                         .startObject()
@@ -364,7 +370,8 @@ public class DriveRiver extends AbstractRiverComponent implements River{
                            .startObject("file")
                               .field("_content_type", drive.getMimeType(driveFile))
                               .field("_name", driveFile.getTitle())
-                              .field("content", Base64.encodeBytes(fileContent))
+                              .field("title", driveFile.getTitle())
+                              .field("file", parsedContent)
                            .endObject()
                         .endObject());
                
