@@ -58,7 +58,7 @@ public class DriveManageAction extends BaseRestHandler{
    @Override
    public void handleRequest(RestRequest request, RestChannel channel){
       if (logger.isDebugEnabled()){
-         logger.debug("REST S3ManageAction called");
+         logger.debug("REST DriveManageAction called");
       }
       
       String rivername = request.param("rivername");
