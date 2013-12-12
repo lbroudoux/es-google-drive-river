@@ -24,9 +24,10 @@ import org.elasticsearch.rest.RestModule;
 import org.elasticsearch.river.RiversModule;
 
 import com.github.lbroudoux.elasticsearch.river.drive.river.DriveRiverModule;
+import com.github.lbroudoux.elasticsearch.river.drive.rest.DriveManageAction;
 import com.github.lbroudoux.elasticsearch.river.drive.rest.DriveOAuthAction;
 /**
- * 
+ * Google Drive River plugin definition.
  * @author laurent
  */
 public class DriveRiverPlugin extends AbstractPlugin{
@@ -48,6 +49,7 @@ public class DriveRiverPlugin extends AbstractPlugin{
       }
       if (module instanceof RestModule){
          ((RestModule) module).addRestAction(DriveOAuthAction.class);
+         ((RestModule) module).addRestAction(DriveManageAction.class);
       }
    }
 }

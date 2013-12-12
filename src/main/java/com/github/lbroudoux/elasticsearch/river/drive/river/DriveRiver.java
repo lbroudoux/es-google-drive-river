@@ -262,15 +262,18 @@ public class DriveRiver extends AbstractRiverComponent implements River{
             }
             
             try{
-               bulk = client.prepareBulk();
-               // Scan folder starting from last changes id, then record the new one.
-               Long lastChangesId = getLastChangesIdFromRiver("_lastChangesId");
-               lastChangesId = scan(feedDefinition.getFolder(), lastChangesId);
-               updateRiver("_lastChangesId", lastChangesId);
-               
-               // If some bulkActions remains, we should commit them
-               commitBulk();
-               
+               if (isStarted()){
+                  bulk = client.prepareBulk();
+                  // Scan folder starting from last changes id, then record the new one.
+                  Long lastChangesId = getLastChangesIdFromRiver("_lastChangesId");
+                  lastChangesId = scan(feedDefinition.getFolder(), lastChangesId);
+                  updateRiver("_lastChangesId", lastChangesId);
+                  
+                  // If some bulkActions remains, we should commit them
+                  commitBulk();
+               } else {
+                  logger.info("Google Drive River is disabled for {}", riverName().name());
+               }
             } catch (Exception e){
                logger.warn("Error while indexing content from {}", feedDefinition.getFolder());
                if (logger.isDebugEnabled()){
@@ -289,6 +292,31 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          }
       }
 
+      private boolean isStarted(){
+         // Refresh index before querying it.
+         client.admin().indices().prepareRefresh("_river").execute().actionGet();
+         GetResponse isStartedGetResponse = client.prepareGet("_river", riverName().name(), "_drivestatus").execute().actionGet();
+         try{
+            if (!isStartedGetResponse.isExists()){
+               XContentBuilder xb = jsonBuilder().startObject()
+                     .startObject("google-drive")
+                        .field("feedname", feedDefinition.getFeedname())
+                        .field("status", "STARTED").endObject()
+                     .endObject();
+               client.prepareIndex("_river", riverName.name(), "_drivestatus").setSource(xb).execute();
+               return true;
+            } else {
+               String status = (String)XContentMapValues.extractValue("google-drive.status", isStartedGetResponse.getSourceAsMap());
+               if ("STOPPED".equals(status)){
+                  return false;
+               }
+            }
+         } catch (Exception e){
+            logger.warn("failed to get status for " + riverName().name() + ", throttling....", e);
+         }
+         return true;
+      }
+      
       @SuppressWarnings("unchecked")
       private Long getLastChangesIdFromRiver(String lastChangesField){
          Long result = null;
