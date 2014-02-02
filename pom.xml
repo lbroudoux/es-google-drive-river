@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.lbroudoux.elasticsearch</groupId>
   <artifactId>google-drive-river</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
   
   <parent>
@@ -31,7 +31,7 @@
     <url>scm:git@github.com:lbroudoux/es-google-drive-river.git</url>
     <connection>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</connection>
     <developerConnection>scm:git:git@github.com:lbroudoux/es-google-drive-river.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>google-drive-river-0.0.2</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>
