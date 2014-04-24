@@ -23,7 +23,19 @@ Versions
    </thead>
    <tbody>
       <tr>
-         <td>master (0.0.2-SNAPSHOT)</td>
+         <td>master (0.0.4-SNAPSHOT)</td>
+         <td>1.0.0</td>
+         <td>No more used</td>
+         <td>1.4</td>
+      </tr>
+      <tr>
+         <td>0.0.3</td>
+         <td>1.0.0</td>
+         <td>No more used</td>
+         <td>1.4</td>
+      </tr>
+      <tr>
+         <td>0.0.2</td>
          <td>0.90.0</td>
          <td>No more used</td>
          <td>1.4</td>
@@ -53,15 +65,15 @@ Installation
 Just install a regular Elasticsearhc plugin by typing :
 
 ```sh
-$ bin/plugin -install com.github.lbroudoux.elasticsearch/google-drive-river/0.0.1
+$ bin/plugin -install com.github.lbroudoux.elasticsearch/google-drive-river/0.0.3
 ```
 
 This will do the job...
 
 ```
--> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.1...
-Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.1.zip...
-Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.1/google-drive-river-0.0.1.zip...
+-> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.3...
+Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.3.zip...
+Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.3/google-drive-river-0.0.3.zip...
 Downloading ......DONE
 Installed google-drive-river
 ```
