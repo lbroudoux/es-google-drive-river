@@ -182,7 +182,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
     */
    private boolean isMappingExist(String index, String type) {
       ClusterState cs = client.admin().cluster().prepareState()
-            .setFilterIndices(index).execute().actionGet()
+            .setIndices(index).execute().actionGet()
             .getState();
       // Check index metadata existence.
       IndexMetaData imd = cs.getMetaData().index(index);
