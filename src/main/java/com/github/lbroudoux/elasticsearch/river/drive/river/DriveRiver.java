@@ -132,7 +132,10 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          logger.info("Starting google drive river scanning");
       }
       try{
-         client.admin().indices().prepareCreate(indexName).execute().actionGet();
+         // Create the index if it doesn't exist.
+         if (!client.admin().indices().prepareExists(indexName).execute().actionGet().isExists()){
+            client.admin().indices().prepareCreate(indexName).execute().actionGet();
+         }
       } catch (Exception e) {
          if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException){
             // that's fine.
