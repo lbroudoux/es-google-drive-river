@@ -34,10 +34,10 @@ public class DriveRiverFeedDefinition{
    private String clientId;
    private String clientSecret;
    private String refreshToken;
-   
-   
+   private boolean jsonSupport;
+
    public DriveRiverFeedDefinition(String feedname, String folder, int updateRate, 
-         List<String> includes, List<String> excludes, String clientId, String clientSecret, String refreshToken){
+         List<String> includes, List<String> excludes, String clientId, String clientSecret, String refreshToken, boolean jsonSupport){
       this.feedname = feedname;
       this.folder = folder;
       this.updateRate = updateRate;
@@ -46,6 +46,7 @@ public class DriveRiverFeedDefinition{
       this.clientId = clientId;
       this.clientSecret = clientSecret;
       this.refreshToken = refreshToken;
+      this.jsonSupport = jsonSupport;
    }
    
    public String getFeedname() {
@@ -103,4 +104,6 @@ public class DriveRiverFeedDefinition{
    public void setRefreshToken(String refreshToken) {
       this.refreshToken = refreshToken;
    }
+
+   public boolean isJsonSupport(){ return jsonSupport; }
 }

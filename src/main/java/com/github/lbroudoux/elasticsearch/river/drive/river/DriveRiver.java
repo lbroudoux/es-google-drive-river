@@ -87,6 +87,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          String feedname = XContentMapValues.nodeStringValue(feed.get("name"), null);
          String folder = XContentMapValues.nodeStringValue(feed.get("folder"), null);
          int updateRate = XContentMapValues.nodeIntegerValue(feed.get("update_rate"), 15 * 60 * 1000);
+         boolean jsonSupport = XContentMapValues.nodeBooleanValue(feed.get("json_support"), false);
          
          String[] includes = DriveRiverUtil.buildArrayFromSettings(settings.settings(), "google-drive.includes");
          String[] excludes = DriveRiverUtil.buildArrayFromSettings(settings.settings(), "google-drive.excludes");
@@ -97,7 +98,7 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          String refreshToken = XContentMapValues.nodeStringValue(feed.get("refreshToken"), null);
          
          feedDefinition = new DriveRiverFeedDefinition(feedname, folder, updateRate, 
-               Arrays.asList(includes), Arrays.asList(excludes), clientId, clientSecret, refreshToken);
+               Arrays.asList(includes), Arrays.asList(excludes), clientId, clientSecret, refreshToken, jsonSupport);
       } else {
          logger.error("You didn't define the google-drive settings. Exiting... See https://github.com/lbroudoux/es-google-drive-river");
          indexName = null;
@@ -149,7 +150,9 @@ public class DriveRiver extends AbstractRiverComponent implements River{
       
       try{
          // If needed, we create the new mapping for files
-         pushMapping(indexName, typeName, DriveRiverUtil.buildDriveFileMapping(typeName));       
+         if (!feedDefinition.isJsonSupport()) {
+            pushMapping(indexName, typeName, DriveRiverUtil.buildDriveFileMapping(typeName));
+         }
       } catch (Exception e) {
          logger.warn("Failed to create mapping for [{}/{}], disabling river...",
                e, indexName, typeName);
@@ -410,32 +413,37 @@ public class DriveRiver extends AbstractRiverComponent implements River{
          }
          
          try{
-            byte[] fileContent = drive.getContent(driveFile);
-            if (fileContent != null){
-               // Parse content using Tika directly.
-               String parsedContent = TikaHolder.tika().parseToString(
-                     new BytesStreamInput(fileContent, false), new Metadata());
-               
-               esIndex(indexName, typeName, driveFile.getId(),
-                     jsonBuilder()
-                        .startObject()
-                           .field(DriveRiverUtil.DOC_FIELD_TITLE, driveFile.getTitle())
-                           .field(DriveRiverUtil.DOC_FIELD_CREATED_DATE, driveFile.getCreatedDate().getValue())
-                           .field(DriveRiverUtil.DOC_FIELD_MODIFIED_DATE, driveFile.getModifiedDate().getValue())
-                           .field(DriveRiverUtil.DOC_FIELD_SOURCE_URL, driveFile.getAlternateLink())
-                           .startObject("file")
+            if (feedDefinition.isJsonSupport()){
+               esIndex(indexName, typeName, driveFile.getId(), drive.getContent(driveFile));
+            } else {
+               byte[] fileContent = drive.getContent(driveFile);
+               if (fileContent != null) {
+                  // Parse content using Tika directly.
+                  String parsedContent = TikaHolder.tika().parseToString(
+                        new BytesStreamInput(fileContent, false), new Metadata());
+
+                  esIndex(indexName, typeName, driveFile.getId(),
+                        jsonBuilder()
+                              .startObject()
+                              .field(DriveRiverUtil.DOC_FIELD_TITLE, driveFile.getTitle())
+                              .field(DriveRiverUtil.DOC_FIELD_CREATED_DATE, driveFile.getCreatedDate().getValue())
+                              .field(DriveRiverUtil.DOC_FIELD_MODIFIED_DATE, driveFile.getModifiedDate().getValue())
+                              .field(DriveRiverUtil.DOC_FIELD_SOURCE_URL, driveFile.getAlternateLink())
+                              .startObject("file")
                               .field("_content_type", drive.getMimeType(driveFile))
                               .field("_name", driveFile.getTitle())
                               .field("title", driveFile.getTitle())
                               .field("file", parsedContent)
-                           .endObject()
-                        .endObject());
-               
-               if (logger.isDebugEnabled()){
-                  logger.debug("Index " + driveFile.getTitle() + " : success");
+                              .endObject()
+                              .endObject()
+                  );
+
+                  if (logger.isDebugEnabled()) {
+                     logger.debug("Index " + driveFile.getTitle() + " : success");
+                  }
+               } else {
+                  logger.debug("File content was returned as null");
                }
-            } else {
-               logger.debug("File content was returned as null");
             }
          } catch (Exception e) {
             logger.warn("Can not index " + driveFile.getTitle() + " : " + e.getMessage());
@@ -468,6 +476,17 @@ public class DriveRiver extends AbstractRiverComponent implements River{
             logger.trace("Json indexed : {}", xb.string());
          }
          bulkProcessor.add(client.prepareIndex(index, type, id).setSource(xb).request());
+      }
+
+      /** Add to bulk an IndexRequest. */
+      private void esIndex(String index, String type, String id, byte[] json) throws Exception{
+         if (logger.isDebugEnabled()){
+            logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
+         }
+         if (logger.isTraceEnabled()){
+            logger.trace("Json indexed : {}", json);
+         }
+         bulkProcessor.add(client.prepareIndex(index, type, id).setSource(json).request());
       }
 
       /** Add to bulk a DeleteRequest. */
