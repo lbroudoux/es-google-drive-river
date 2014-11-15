@@ -23,7 +23,13 @@ Versions
    </thead>
    <tbody>
       <tr>
-         <td>master (0.0.4-SNAPSHOT)</td>
+         <td>master (1.2.0-SNAPSHOT)</td>
+         <td>1.2.x</td>
+         <td>No more used</td>
+         <td>1.4</td>
+      </tr>
+      <tr>
+         <td>0.0.4</td>
          <td>1.0.x and 1.1.x</td>
          <td>No more used</td>
          <td>1.4</td>
@@ -59,15 +65,15 @@ Installation
 Just install a regular Elasticsearch plugin by typing :
 
 ```sh
-$ bin/plugin -install com.github.lbroudoux.elasticsearch/google-drive-river/0.0.3
+$ bin/plugin --install com.github.lbroudoux.elasticsearch/google-drive-river/0.0.4
 ```
 
 This will do the job...
 
 ```
--> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.3...
-Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.3.zip...
-Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.3/google-drive-river-0.0.3.zip...
+-> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.4...
+Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.4.zip...
+Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.4/google-drive-river-0.0.4.zip...
 Downloading ......DONE
 Installed google-drive-river
 ```
@@ -89,7 +95,7 @@ You need then to get an Authorization Code from the user owning the Google accou
 Just open the `_drive` REST Endpoint with your `clientId` and `clientSecret` parameters: http://localhost:9200/_river/oauth/clientId/clientSecret
 
 ```sh
-$ curl http://localhost:9200/_drive/oauth/clientId/clientSecret
+$ curl http://localhost:9200/_drive/oauth/{clientId}/{clientSecret}
 ```
 You will get back a URL:
 
@@ -103,14 +109,14 @@ Open the URL in your browser. You will be asked by Google to allow your applicat
 Once you get back the success reply from Google, you can get the future river `refreshToken` by pasting gathered Authorization Code and calling
 
 ```sh
-$ curl http://localhost:9200/_drive/oauth/clientId/clientSecret/authorizationCode
+$ curl http://localhost:9200/_drive/oauth/{clientId}/{clientSecret}/{authorizationCode}
 ```
 You will get back a JSON document like the following :
 
 ```javascript
 {
   "accessToken" : "yourAccessToken",
-  "refreshToken" : "youRefreshToken"
+  "refreshToken" : "yourRefreshToken"
 }
 ```
 
