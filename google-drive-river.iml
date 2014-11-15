@@ -11,21 +11,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-codecs:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queries:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-memory:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-highlighter:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-sandbox:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-suggest:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-misc:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-join:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: com.spatial4j:spatial4j:0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-codecs:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queries:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-memory:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-highlighter:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-sandbox:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-suggest:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-misc:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-join:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: com.spatial4j:spatial4j:0.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-parsers:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.gagravarr:vorbis-java-tika:0.1" level="project" />

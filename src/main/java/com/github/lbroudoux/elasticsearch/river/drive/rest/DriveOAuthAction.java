@@ -27,14 +27,12 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentBuilderString;
 import org.elasticsearch.rest.BaseRestHandler;
+import org.elasticsearch.rest.BytesRestResponse;
 import org.elasticsearch.rest.RestChannel;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestRequest.Method;
 import org.elasticsearch.rest.RestStatus;
-import org.elasticsearch.rest.XContentRestResponse;
-import org.elasticsearch.rest.XContentThrowableRestResponse;
-import org.elasticsearch.rest.action.support.RestXContentBuilder;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -43,6 +41,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.DriveScopes;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 /**
  * 
  * @author laurent
@@ -59,7 +59,7 @@ public class DriveOAuthAction extends BaseRestHandler{
    }
    
    @Override
-   public void handleRequest(RestRequest request, RestChannel channel){
+   public void handleRequest(RestRequest request, RestChannel channel) throws Exception{
       if (logger.isDebugEnabled()){
          logger.debug("REST DriveOAuthAction called");
       }
@@ -74,7 +74,7 @@ public class DriveOAuthAction extends BaseRestHandler{
       }
       
       try{
-         XContentBuilder builder = RestXContentBuilder.restContentBuilder(request);
+         XContentBuilder builder = jsonBuilder();
          // We'll use some transport and json factory for sure.
          HttpTransport httpTransport = new NetHttpTransport();
          JsonFactory jsonFactory = new JacksonFactory();
@@ -112,19 +112,19 @@ public class DriveOAuthAction extends BaseRestHandler{
                   .field(new XContentBuilderString("refreshToken"), response.getRefreshToken())
                .endObject();
          }
-         channel.sendResponse(new XContentRestResponse(request, RestStatus.OK, builder));
+         channel.sendResponse(new BytesRestResponse(RestStatus.OK, builder));
       } catch (IOException ioe){
          onFailure(request, channel, ioe);
       }
    }
-   
+
    /** */
-   protected void onFailure(RestRequest request, RestChannel channel, Exception e){
+   protected void onFailure(RestRequest request, RestChannel channel, Exception e) throws Exception{
       try{
-          channel.sendResponse(new XContentThrowableRestResponse(request, e));
+         channel.sendResponse(new BytesRestResponse(channel, e));
       } catch (IOException ioe){
          logger.error("Sending failure response fails !", e);
+         channel.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
       }
-      
    }
 }
