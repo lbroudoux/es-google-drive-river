@@ -23,7 +23,13 @@ Versions
    </thead>
    <tbody>
       <tr>
-         <td>master (1.2.0-SNAPSHOT)</td>
+         <td>master (1.2.1-SNAPSHOT)</td>
+         <td>1.2.x</td>
+         <td>No more used</td>
+         <td>1.4</td>
+      </tr>
+      <tr>
+         <td>1.2.0</td>
          <td>1.2.x</td>
          <td>No more used</td>
          <td>1.4</td>
@@ -65,15 +71,15 @@ Installation
 Just install a regular Elasticsearch plugin by typing :
 
 ```sh
-$ bin/plugin --install com.github.lbroudoux.elasticsearch/google-drive-river/0.0.4
+$ bin/plugin --install com.github.lbroudoux.elasticsearch/google-drive-river/1.2.0
 ```
 
 This will do the job...
 
 ```
--> Installing com.github.lbroudoux.elasticsearch/google-drive-river/0.0.4...
-Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-0.0.4.zip...
-Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/0.0.4/google-drive-river-0.0.4.zip...
+-> Installing com.github.lbroudoux.elasticsearch/google-drive-river/1.2.0...
+Trying http://download.elasticsearch.org/com.github.lbroudoux.elasticsearch/google-drive-river/google-drive-river-1.2.0.zip...
+Trying http://search.maven.org/remotecontent?filepath=com/github/lbroudoux/elasticsearch/google-drive-river/1.2.0/google-drive-river-1.2.0.zip...
 Downloading ......DONE
 Installed google-drive-river
 ```
