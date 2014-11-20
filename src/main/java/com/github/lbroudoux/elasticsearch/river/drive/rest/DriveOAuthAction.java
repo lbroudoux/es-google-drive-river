@@ -59,7 +59,7 @@ public class DriveOAuthAction extends BaseRestHandler{
    }
    
    @Override
-   public void handleRequest(RestRequest request, RestChannel channel) throws Exception{
+   public void handleRequest(RestRequest request, RestChannel channel, Client client) throws Exception{
       if (logger.isDebugEnabled()){
          logger.debug("REST DriveOAuthAction called");
       }
